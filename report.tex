@@ -1,0 +1,108 @@
+
+% VLDB template version of 2020-08-03 enhances the ACM template, version 1.7.0:
+% https://www.acm.org/publications/proceedings-template
+% The ACM Latex guide provides further information about the ACM template
+
+\documentclass[sigconf, nonacm]{acmart}
+
+%% The following content must be adapted for the final version
+% paper-specific
+\newcommand\vldbdoi{XX.XX/XXX.XX}
+\newcommand\vldbpages{XXX-XXX}
+% issue-specific
+\newcommand\vldbvolume{14}
+\newcommand\vldbissue{1}
+\newcommand\vldbyear{2020}
+% should be fine as it is
+\newcommand\vldbauthors{\authors}
+\newcommand\vldbtitle{\shorttitle} 
+% leave empty if no availability url should be set
+\newcommand\vldbavailabilityurl{URL_TO_YOUR_ARTIFACTS}
+% whether page numbers should be shown or not, use 'plain' for review versions, 'empty' for camera ready
+\newcommand\vldbpagestyle{plain} 
+
+\usepackage{listings}
+\include{json-lang.tex}
+
+\begin{document}
+\title{RepEng Project}
+
+%%
+%% The "author" command and its associated commands are used to define the authors and their affiliations.
+\author{Jonas Piehler}
+\affiliation{%
+  \institution{University of Passau}
+  \streetaddress{Innstraße 33}
+  \city{Passau}
+  \state{Germany}
+  \postcode{94032}
+}
+\email{piehlerj@fim.uni-passau.de}
+
+%%
+%% The abstract is a short summary of the work to be presented in the
+%% article.
+%\begin{abstract}
+%Praesent imperdiet, lacus nec varius placerat, est ex eleifend justo, a vulputate leo massa consectetur nunc. %Donec posuere in mi ut tempus. Pellentesque sem odio, faucibus non mi in, laoreet maximus arcu. In hac %habitasse platea dictumst. Nunc euismod neque eu urna accumsan, vitae vehicula metus tincidunt. Maecenas %congue tortor nec varius pellentesque. Pellentesque bibendum libero ac dignissim euismod. Aliquam justo %ante, pretium vel mollis sed, consectetur accumsan nibh. Nulla sit amet sollicitudin est. Etiam ullamcorper %diam a sapien lacinia faucibus.
+%\end{abstract}
+
+\maketitle
+
+%%% do not modify the following VLDB block %%
+%%% VLDB block start %%%
+\ifdefempty{\vldbavailabilityurl}{}{
+\vspace{.3cm}
+\begingroup\small\noindent\raggedright\textbf{Artifact:}\\
+\url{https://github.com/Nalto/RepEng.git}
+\endgroup
+}
+%%% VLDB block end %%%
+
+\section{Introduction}
+
+Frozza et al. \cite{SchemaExtraction} introduced a software to extract JSON Schemas from a collection of JSON or Extended JSON files.  They used five different types of documents as schown in \autoref{tab:docs} and claimed their software would be able to extract a general schema for these document types. They showed the Doc-3 JSON document in their paper, see \autoref{fig:doc3}, and based on this file, the other document types will be generated and used to confirm their claimed result shown in \autoref{fig:schema3} will be obtained after the first step of the algorithm. The order of the JSON properties will be ignored for this comparison.
+
+\begin{table}[b]% h asks to places the floating element [h]ere.
+	\caption{Input JSON Documents}
+	\label{tab:docs}
+	\begin{tabular}{cl}
+		\toprule
+		Document & Content \\
+		\midrule
+		Doc-1 & Base document with major JSON and JSON \\
+		 & extended data types. \\
+		Doc-2 & Doc-1 with changes in the data values. \\
+		Doc-3 & JSON document with values representing all \\
+		 & Extended JSON data types, and an array containing \\
+		  & items with different data types. \\
+		Doc-4 & Similar to Doc-3, but some attributes and items of \\
+		 & the arrays were deleted. It was created to represent \\
+		  & optional attributes. \\
+		Doc-5 & Similar to Doc-4, but the attributes are in different \\
+		 & order. \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\begin{figure}[b]
+	\centering
+	\caption{Doc-3 JSON Document}
+	\label{fig:doc3}
+	\lstinputlisting[language=json]{jsons/doc-3.json}
+\end{figure}
+
+\begin{figure}[b]
+	\centering
+	\caption{Doc-3 Raw Schema}
+	\label{fig:schema3}
+	\lstinputlisting[language=json]{jsons/doc-3-raw-schema.json}
+\end{figure}
+
+%\clearpage
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{report}
+
+\end{document}
+\endinput
+
