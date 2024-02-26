@@ -53,16 +53,17 @@
 \ifdefempty{\vldbavailabilityurl}{}{
 \vspace{.3cm}
 \begingroup\small\noindent\raggedright\textbf{Artifact:}\\
-\url{https://github.com/Nalto/RepEng.git}
+The source code, data, and/or other artifacts have been made available at \url{https://github.com/Nalto/RepEng.git}, DOI: 10.5281/zenodo.10713680
 \endgroup
 }
 %%% VLDB block end %%%
 
 \section{Introduction}
+There are many different standard file formats for information exchange, one of the most known is Extensible Markup Language (XML). While this standard is pretty powerful, a lot of attention is needed while parsing and generating a file. The JavaScript Object Notation (JSON) on the other hand is a popular data format as it is easier to parse, generate and read. Most APIs nowadays exchange data using JSONs and there are also other applications like MongoDB, which is a database that utilizes JSONs to store data.
 
-Frozza et al. \cite{SchemaExtraction} introduced a software to extract JSON Schemas from a collection of JSON or Extended JSON files.  They used five different types of documents as schown in \autoref{tab:docs} and claimed their software would be able to extract a general schema for these document types. They showed the Doc-3 JSON document in their paper, see \autoref{fig:doc3}, and based on this file, the other document types will be generated and used to confirm their claimed result shown in \autoref{fig:schema3} will be obtained after the first step of the algorithm. The order of the JSON properties will be ignored for this comparison.
-
-\begin{table}[b]% h asks to places the floating element [h]ere.
+\section{JSON Schema Discovery}
+Frozza et al. \cite{SchemaExtraction} introduced a software to extract JSON schemas from a collection of JSON or Extended JSON files. This software is an Angular server that takes JSONs from a MongoDB database. To demonstrate the potential of their project, they used five different types of documents as schown in \autoref{tab:docs} and claimed their software would be able to extract a general schema for these document types. 
+\begin{table}[h]% h asks to places the floating element [h]ere.
 	\caption{Input JSON Documents}
 	\label{tab:docs}
 	\begin{tabular}{cl}
@@ -70,33 +71,49 @@ Frozza et al. \cite{SchemaExtraction} introduced a software to extract JSON Sche
 		Document & Content \\
 		\midrule
 		Doc-1 & Base document with major JSON and JSON \\
-		 & extended data types. \\
+		& extended data types. \\
 		Doc-2 & Doc-1 with changes in the data values. \\
 		Doc-3 & JSON document with values representing all \\
-		 & Extended JSON data types, and an array containing \\
-		  & items with different data types. \\
+		& Extended JSON data types, and an array containing \\
+		& items with different data types. \\
 		Doc-4 & Similar to Doc-3, but some attributes and items of \\
-		 & the arrays were deleted. It was created to represent \\
-		  & optional attributes. \\
+		& the arrays were deleted. It was created to represent \\
+		& optional attributes. \\
 		Doc-5 & Similar to Doc-4, but the attributes are in different \\
-		 & order. \\
+		& order. \\
 		\bottomrule
 	\end{tabular}
 \end{table}
 
-\begin{figure}[b]
+\section{Reproduction}
+This paper focuses on the reproduction of Frozzas et al. \cite{SchemaExtraction} claims that a general JSON schema can be extracted from the five given document types as well as a specific raw schema for every single document type after the first step of the algorithm. The Doc-3 JSON is shown in \autoref{fig:doc3} and the first step should deliver \autoref{fig:schema3}. The results of the algorithm will be compared with the ones from Frozza et al. using the diff command.
+\begin{figure}[t]
 	\centering
 	\caption{Doc-3 JSON Document}
 	\label{fig:doc3}
-	\lstinputlisting[language=json]{jsons/doc-3.json}
+	\lstinputlisting[language=json]{jsons/bsontypestest3.bson}
 \end{figure}
 
-\begin{figure}[b]
+\begin{figure}[t]
 	\centering
 	\caption{Doc-3 Raw Schema}
 	\label{fig:schema3}
-	\lstinputlisting[language=json]{jsons/doc-3-raw-schema.json}
+	\lstinputlisting[language=json]{jsons/bsontypestest3rawschema.json}
 \end{figure}
+
+\subsection{Approach}
+\label{sec:approach}
+To verify the results the reproduction package is build inside a docker container that runs the ubuntu 22.04 system and the required software dependencies mongoDB, NodeJS and the minimal version specified in the package.json of Angular and Typescript are installed. The provided code causes some Typescript compilation errors, so some patches to address this issue are applied. After everything is set up, the software is invoked and the raw schemas of the JSONs that can be found in the examples directory are extracted. These are compared with the corresponding raw schemas also located in the example directory using the diff command.
+\subsection{Encountered Difficulties}
+As already mentioned, the provided code failed to run because of some Typescript compilation errors, which where fixed by applying some patches. After that, the development server could be started running the command provided by the code to do so, but any interaction with the user interface of software resulted in an error stating that the request was proxied to port 3000 and the connection was refused. Which would mean there is supposed to be another server listening to that port and it isn't running. The command to build and run the production server is also faulty and is patched to be working, but no server that listens to the port 4200 or 3000 seems to be active. \par
+Trying to interact with the server using the access points declared in the routes.ts file doesn't get any results. The cause of the problems to interact with the server is the abundance of sufficient documentation. Apart from stating the dependencies of the software, no further explanation how to use and interact with the software is provided, which makes it also difficult to pinpoint the concrete problem.
+
+\section{Results}
+Due to lacking documentation, the results of Frozza et al. \cite{SchemaExtraction} could not be verified. The software could be invoked, but further interaction with it proved to be difficult and detecting any issues was unsuccessful.
+
+\section{Conclusion}
+
+JSONs are a popular data exchange format with many use-cases. The paper of Frozza et al. \cite{SchemaExtraction} provide an algorithm to extract a general raw schema from a collection of JSON files. In this work, a reproduction of the results of said paper was attempted, because of lacking documentation of the code, any attempts to interact with the software after its installation failed. All attempts and the diagnosis are provided in \autoref{sec:approach}.
 
 %\clearpage
 
